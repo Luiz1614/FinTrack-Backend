@@ -1,10 +1,11 @@
 ﻿using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Data.Context;
+using FinTrack.Infraestructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.Infraestructure.Repositories;
 
-public class CategoryRepository : ICategoryRepositories
+public class CategoryRepository : ICategoryRepository
 {
     private readonly DataContext _context;
 
