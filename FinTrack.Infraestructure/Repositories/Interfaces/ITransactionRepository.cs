@@ -1,0 +1,15 @@
+﻿using FinTrack.Domain.Entities;
+
+namespace FinTrack.Infraestructure.Repositories.Interfaces
+{
+    public interface ITransactionRepository
+    {
+        Task<Transaction> AddTransactionAsync(Transaction transaction);
+        Task<bool> DeleteTransactionAsync(int id);
+        Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
+        Task<IEnumerable<Transaction>> GetByAccountAsync(int accountId);
+        Task<IEnumerable<Transaction>> GetByCategoryAsync(int categoryId);
+        Task<Transaction?> GetTransactionByIdAsync(int id);
+        Task<Transaction?> UpdateTransactionAsync(Transaction transaction);
+    }
+}
