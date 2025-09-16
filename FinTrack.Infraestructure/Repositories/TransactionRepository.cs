@@ -47,15 +47,6 @@ public class TransactionRepository : ITransactionRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Transaction>> GetByCategoryAsync(int categoryId)
-    {
-        return await _context.Transactions
-            .AsNoTracking()
-            .Where(t => t.CategoryId == categoryId)
-            .OrderByDescending(t => t.CreatedAt)
-            .ToListAsync();
-    }
-
     public async Task<Transaction?> GetTransactionByIdAsync(int id)
     {
         return await _context.Transactions

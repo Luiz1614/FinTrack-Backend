@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Fintrack.Contracts.DTOs.Transaction;
+using FinTrack.Application.Services.Interfaces;
 using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Repositories.Interfaces;
 
