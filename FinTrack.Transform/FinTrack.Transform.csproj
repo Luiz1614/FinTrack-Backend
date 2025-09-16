@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinTrack.Infraestructure\FinTrack.Infraestructure.csproj" />
-    <ProjectReference Include="..\FinTrack.Transform\FinTrack.Transform.csproj" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <ProjectReference Include="..\Fintrack.Contracts\Fintrack.Contracts.csproj" />
+    <ProjectReference Include="..\FinTrack.Domain\FinTrack.Domain.csproj" />
   </ItemGroup>
 
 </Project>
