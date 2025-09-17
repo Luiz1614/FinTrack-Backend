@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FinTrack.Application\FinTrack.Application.csproj" />
     <ProjectReference Include="..\FinTrack.IoC\FinTrack.IoC.csproj" />
   </ItemGroup>
 
