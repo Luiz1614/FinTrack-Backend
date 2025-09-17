@@ -2,6 +2,8 @@
 using Fintrack.Contracts.DTOs.Account;
 using FinTrack.Application.DTOs.Accounts;
 using FinTrack.Domain.Entities;
+using FinTrack.Domain.Enums;
+using System.Linq;
 
 namespace FinTrack.Transform.Profiles;
 
@@ -11,7 +13,10 @@ public class AccountProfile : Profile
     {
         // Domain -> DTO
         CreateMap<Account, AccountDto>()
-            .ForMember(d => d.CurrentBalance, opt => opt.Ignore()) // calculado em serviço
+            .ForMember(d => d.CurrentBalance, opt => opt.MapFrom(s =>
+                s.Transactions != null
+                    ? s.InitialBalance + s.Transactions.Sum(t => t.Type == TransactionType.Income ? t.Amount : -t.Amount)
+                    : s.InitialBalance))
             .ForMember(d => d.Transactions, opt => opt.MapFrom(s => s.Transactions));
 
         CreateMap<Transaction, AccountTransactionDto>()

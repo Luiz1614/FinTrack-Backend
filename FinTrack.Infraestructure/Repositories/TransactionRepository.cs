@@ -17,16 +17,23 @@ public class TransactionRepository : ITransactionRepository
     public async Task<Transaction> AddTransactionAsync(Transaction transaction)
     {
         await _context.Transactions.AddAsync(transaction);
-        return transaction;
+        await _context.SaveChangesAsync();
+
+        return await _context.Transactions
+            .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
+            .FirstAsync(t => t.Id == transaction.Id);
     }
 
     public async Task<bool> DeleteTransactionAsync(int id)
     {
-        var entity = await GetTransactionByIdAsync(id);
+        var entity = await _context.Transactions.FindAsync(id);
         if (entity == null)
             return false;
 
         _context.Transactions.Remove(entity);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -34,6 +41,8 @@ public class TransactionRepository : ITransactionRepository
     {
         return await _context.Transactions
             .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }
@@ -42,6 +51,8 @@ public class TransactionRepository : ITransactionRepository
     {
         return await _context.Transactions
             .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
             .Where(t => t.AccountId == accountId)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
@@ -51,15 +62,30 @@ public class TransactionRepository : ITransactionRepository
     {
         return await _context.Transactions
             .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<Transaction?> UpdateTransactionAsync(Transaction transaction)
     {
-        var entity = await GetTransactionByIdAsync(transaction.Id);
+        var entity = await _context.Transactions.FindAsync(transaction.Id);
+        if (entity == null)
+            return null;
+
+        entity.Title = transaction.Title;
+        entity.Type = transaction.Type;
+        entity.Amount = transaction.Amount;
+        entity.CategoryId = transaction.CategoryId;
+        entity.AccountId = transaction.AccountId;
 
         _context.Transactions.Update(entity);
+        await _context.SaveChangesAsync();
 
-        return entity;
+        return await _context.Transactions
+            .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
+            .FirstOrDefaultAsync(t => t.Id == entity.Id);
     }
 }

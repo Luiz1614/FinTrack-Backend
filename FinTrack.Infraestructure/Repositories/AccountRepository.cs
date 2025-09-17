@@ -17,17 +17,18 @@ public class AccountRepository : IAccountRepository
     public async Task<Account> AddAccountAsync(Account account)
     {
         await _context.Accounts.AddAsync(account);
+        await _context.SaveChangesAsync();
         return account;
     }
 
     public async Task<bool> DeleteAccountAsync(int id)
     {
-        var category = await GetAccountByIdAsync(id);
-
-        if (category == null)
+        var accountEntity = await GetAccountByIdAsync(id);
+        if (accountEntity == null)
             return false;
 
-        _context.Accounts.Remove(category);
+        _context.Accounts.Remove(accountEntity);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -43,10 +44,30 @@ public class AccountRepository : IAccountRepository
 
     public async Task<Account> UpdateAccountAsync(Account account)
     {
-        var entity = await GetAccountByIdAsync(account.Id);
+        var exists = await _context.Accounts.AsNoTracking().AnyAsync(a => a.Id == account.Id);
+        if (!exists)
+            throw new KeyNotFoundException($"Account with id {account.Id} not found.");
 
-        _context.Accounts.Update(entity);
+        _context.Accounts.Update(account);
+        await _context.SaveChangesAsync();
+        return account;
+    }
 
-        return entity;
+    public async Task<Account?> GetAccountWithTransactionsAsync(int id)
+    {
+        return await _context.Accounts
+            .AsNoTracking()
+            .Include(a => a.Transactions)
+                .ThenInclude(t => t.Category)
+            .FirstOrDefaultAsync(a => a.Id == id);
+    }
+
+    public async Task<IEnumerable<Account>> GetAllAccountsWithTransactionsAsync()
+    {
+        return await _context.Accounts
+            .AsNoTracking()
+            .Include(a => a.Transactions)
+                .ThenInclude(t => t.Category)
+            .ToListAsync();
     }
 }

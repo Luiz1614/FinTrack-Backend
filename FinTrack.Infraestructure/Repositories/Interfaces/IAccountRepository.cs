@@ -9,5 +9,7 @@ namespace FinTrack.Infraestructure.Repositories.Interfaces
         Task<Account?> GetAccountByIdAsync(int id);
         Task<IEnumerable<Account>> GetAllAccountsAsync();
         Task<Account> UpdateAccountAsync(Account account);
+        Task<Account?> GetAccountWithTransactionsAsync(int id);
+        Task<IEnumerable<Account>> GetAllAccountsWithTransactionsAsync();
     }
 }

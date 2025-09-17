@@ -34,8 +34,8 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetCategoryById([FromHeader] int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetCategoryById([FromQuery] int id)
     {
         try
         {
@@ -53,7 +53,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddCategory(CategoryCreateDto categoryCreateDto)
+    public async Task<IActionResult> AddCategory([FromBody] CategoryCreateDto categoryCreateDto)
     {
         try
         {
@@ -63,6 +63,42 @@ public class CategoryController : ControllerBase
                 return StatusCode((int) HttpStatusCode.BadRequest, "Não foi possível criar a categoria. Verifique os dados enviados.");
 
             return StatusCode((int)HttpStatusCode.Created, "Categoria criada com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
+        }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateCategory([FromBody] CategoryUpdateDto categoryUpdateDto)
+    {
+        try
+        {
+            var result = await _categoryService.UpdateCategoryAsync(categoryUpdateDto);
+
+            if (result == null)
+                return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar a categoria. Verifique os dados enviados.");
+
+            return StatusCode((int)HttpStatusCode.NoContent, "Categoria atualizada com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteCategory([FromQuery]int id)
+    {
+        try
+        {
+            var result = await _categoryService.DeleteCategoryAsync(id);
+
+            if(result == false)
+                return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível deletar a categoria. Verifique os dados enviados.");
+
+            return StatusCode((int)HttpStatusCode.NoContent, "Categoria deletada com sucesso!");
         }
         catch (Exception ex)
         {

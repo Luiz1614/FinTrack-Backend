@@ -1,4 +1,6 @@
-﻿using FinTrack.Domain.Entities;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Data.Context.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,4 +13,10 @@ public class DataContext : DbContext, IDataContext
     public DbSet<Transaction> Transactions { get; set; }
 
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        => base.SaveChangesAsync(cancellationToken);
+
+    public int SaveChanges()
+        => base.SaveChanges();
 }

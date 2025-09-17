@@ -1,4 +1,9 @@
-﻿using FinTrack.Infraestructure.Data.Context;
+﻿using FinTrack.Application.Services;
+using FinTrack.Application.Services.Interfaces;
+using FinTrack.Infraestructure.Data.Context;
+using FinTrack.Infraestructure.Data.Context.Interfaces;
+using FinTrack.Infraestructure.Repositories;
+using FinTrack.Infraestructure.Repositories.Interfaces;
 using FinTrack.Transform.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +20,17 @@ public class DefaultModule
             var connectionString = configuration.GetConnectionString("MySql");
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
+
+        service.AddScoped<IDataContext>(sp => sp.GetRequiredService<DataContext>());
+
+        service.AddTransient<ICategoryRepository, CategoryRepository>();
+        service.AddTransient<ICategoryService, CategoryService>();
+
+        service.AddTransient<IAccountRepository, AccountRepository>();
+        service.AddTransient<IAccountService, AccountService>();
+
+        service.AddTransient<ITransactionRepository, TransactionRepository>();
+        service.AddTransient<ITransactionService, TransactionService>();
 
         service.AddAutoMapper(
             typeof(AccountProfile),

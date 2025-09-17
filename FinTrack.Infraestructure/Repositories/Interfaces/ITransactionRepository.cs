@@ -8,7 +8,6 @@ namespace FinTrack.Infraestructure.Repositories.Interfaces
         Task<bool> DeleteTransactionAsync(int id);
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
         Task<IEnumerable<Transaction>> GetByAccountAsync(int accountId);
-        Task<IEnumerable<Transaction>> GetByCategoryAsync(int categoryId);
         Task<Transaction?> GetTransactionByIdAsync(int id);
         Task<Transaction?> UpdateTransactionAsync(Transaction transaction);
     }

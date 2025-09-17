@@ -15,5 +15,8 @@ public class Account
     [Column(TypeName = "decimal(18, 2)")]
     public decimal InitialBalance { get; set; }
 
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal CurrentBalance { get; set; }
+
     public List<Transaction> Transactions { get; set; } = new();
 }

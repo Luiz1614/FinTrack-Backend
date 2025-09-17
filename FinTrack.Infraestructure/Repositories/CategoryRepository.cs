@@ -17,6 +17,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task<Category> AddCategoryAsync(Category category)
     {
         await _context.Categories.AddAsync(category);
+        await _context.SaveChangesAsync();
         return category;
     }
 
@@ -28,6 +29,7 @@ public class CategoryRepository : ICategoryRepository
             return false;
         }
         _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -44,10 +46,17 @@ public class CategoryRepository : ICategoryRepository
     public async Task<Category> UpdateCategoryAsync(Category category)
     {
         var entity = await GetCategoryByIdAsync(category.Id);
+        if (entity == null)
+        {
+            throw new KeyNotFoundException($"Category with id {category.Id} not found.");
+        }
+
+        entity.Title = category.Title;
+        entity.Description = category.Description;
 
         _context.Categories.Update(entity);
+        await _context.SaveChangesAsync();
 
         return entity;
     }
-
 }
