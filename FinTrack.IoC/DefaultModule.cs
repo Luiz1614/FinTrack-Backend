@@ -32,6 +32,8 @@ public class DefaultModule
         service.AddTransient<ITransactionRepository, TransactionRepository>();
         service.AddTransient<ITransactionService, TransactionService>();
 
+        service.AddTransient<IReportService, ReportService>();
+
         service.AddAutoMapper(
             typeof(AccountProfile),
             typeof(CategoryProfile),
