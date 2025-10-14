@@ -91,11 +91,6 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<IEnumerable<Transaction>> GetTransactionByMonthAsync(int year, int month)
     {
-        if (month is < 1 or > 12)
-        {
-            throw new ArgumentOutOfRangeException(nameof(month), "O mês precisa se entre 1 e 12");
-        }
-
         var start = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
         var end = start.AddMonths(1);
 

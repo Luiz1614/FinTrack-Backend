@@ -75,6 +75,11 @@ public class TransactionController : ControllerBase
     {
         try
         {
+            if (month is < 1 or > 12)
+            {
+                throw new ArgumentOutOfRangeException(nameof(month), "O mês precisa se entre 1 e 12");
+            }
+
             var transactions = await _transactionService.GetTrasactionsByMonthAsync(year, month);
 
             if (transactions == null)
