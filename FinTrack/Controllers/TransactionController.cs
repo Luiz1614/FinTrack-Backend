@@ -70,6 +70,25 @@ public class TransactionController : ControllerBase
         }
     }
 
+    [HttpGet("Month")]
+    public async Task<IActionResult> GetTransactionsByMonth([FromQuery]int year, int month)
+    {
+        try
+        {
+            var transactions = await _transactionService.GetTrasactionsByMonthAsync(year, month);
+
+            if (transactions == null)
+                return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma trasação encontrada para o mês informado.");
+
+            return Ok(transactions);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
+        }
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> AddTransaction([FromBody] TransactionCreateDto transaction)
     {

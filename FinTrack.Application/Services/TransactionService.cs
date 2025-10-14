@@ -61,4 +61,11 @@ public class TransactionService : ITransactionService
 
         return _mapper.Map<TransactionDto>(updatedEntity);
     }
+
+    public async Task<IEnumerable<TransactionDto>> GetTrasactionsByMonthAsync(int year, int month)
+    {
+        var entities = await _transactionRepository.GetTransactionByMonthAsync(year, month);
+
+        return _mapper.Map<IEnumerable<TransactionDto>>(entities);
+    }
 }
