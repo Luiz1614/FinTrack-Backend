@@ -19,90 +19,55 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
-        try
-        {
-            var categories = await _categoryService.GetAllCategoriesAsync();
+        var categories = await _categoryService.GetAllCategoriesAsync();
 
-            if (categories == null)
-                return StatusCode((int) HttpStatusCode.NotFound, $"Nenhuma categoria encontrada.");
+        if (categories == null)
+            return StatusCode((int)HttpStatusCode.NotFound, $"Nenhuma categoria encontrada.");
 
-            return Ok(categories);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        return Ok(categories);
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetCategoryById([FromQuery] int id)
     {
-        try
-        {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+        var category = await _categoryService.GetCategoryByIdAsync(id);
 
-            if (category == null)
-                return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma categoria encontrada para o id inserido.");
+        if (category == null)
+            return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma categoria encontrada para o id inserido.");
 
-            return Ok(category);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        return Ok(category);
     }
 
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromBody] CategoryCreateDto categoryCreateDto)
     {
-        try
-        {
-            var result = await _categoryService.AddCategoryAsync(categoryCreateDto);
+        var result = await _categoryService.AddCategoryAsync(categoryCreateDto);
 
-            if (result == null)
-                return StatusCode((int) HttpStatusCode.BadRequest, "Não foi possível criar a categoria. Verifique os dados enviados.");
+        if (result == null)
+            return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível criar a categoria. Verifique os dados enviados.");
 
-            return StatusCode((int)HttpStatusCode.Created, "Categoria criada com sucesso!");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        return StatusCode((int)HttpStatusCode.Created, "Categoria criada com sucesso!");
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateCategory([FromBody] CategoryUpdateDto categoryUpdateDto)
     {
-        try
-        {
-            var result = await _categoryService.UpdateCategoryAsync(categoryUpdateDto);
+        var result = await _categoryService.UpdateCategoryAsync(categoryUpdateDto);
 
-            if (result == null)
-                return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar a categoria. Verifique os dados enviados.");
+        if (result == null)
+            return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar a categoria. Verifique os dados enviados.");
 
-            return StatusCode((int)HttpStatusCode.NoContent, "Categoria atualizada com sucesso!");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        return StatusCode((int)HttpStatusCode.NoContent, "Categoria atualizada com sucesso!");
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCategory([FromQuery]int id)
     {
-        try
-        {
-            var result = await _categoryService.DeleteCategoryAsync(id);
+        var result = await _categoryService.DeleteCategoryAsync(id);
 
-            if(result == false)
-                return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível deletar a categoria. Verifique os dados enviados.");
+        if (result == false)
+            return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível deletar a categoria. Verifique os dados enviados.");
 
-            return StatusCode((int)HttpStatusCode.NoContent, "Categoria deletada com sucesso!");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        return StatusCode((int)HttpStatusCode.NoContent, "Categoria deletada com sucesso!");
     }
 }

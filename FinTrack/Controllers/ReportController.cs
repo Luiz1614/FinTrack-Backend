@@ -21,14 +21,7 @@ public class ReportsController : ControllerBase
         if (year < 1 || month < 1 || month > 12)
             return StatusCode((int)HttpStatusCode.BadRequest, "Invalid year/month.");
 
-        try
-        {
-            var report = await _reportService.GetMonthlyReportAsync(year, month);
-            return Ok(report);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro interno do servidor: {ex.Message}");
-        }
+        var report = await _reportService.GetMonthlyReportAsync(year, month);
+        return Ok(report);
     }
 }
