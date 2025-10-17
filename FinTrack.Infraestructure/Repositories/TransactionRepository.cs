@@ -89,7 +89,7 @@ public class TransactionRepository : ITransactionRepository
             .FirstOrDefaultAsync(t => t.Id == entity.Id);
     }
 
-    public async Task<IEnumerable<Transaction>> GetTransactionByMonthAsync(int year, int month)
+    public async Task<IEnumerable<Transaction>> GetTransactionByMonthAsync(int idUser, int year, int month)
     {
         var start = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
         var end = start.AddMonths(1);
@@ -99,6 +99,7 @@ public class TransactionRepository : ITransactionRepository
             .Include(t => t.Category)
             .Include(t => t.Account)
             .Where(t => t.CreatedAt >= start && t.CreatedAt <= end)
+            .Where(t => t.AccountId == idUser)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }

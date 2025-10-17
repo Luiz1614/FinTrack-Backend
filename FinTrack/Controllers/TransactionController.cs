@@ -50,14 +50,14 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("Month")]
-    public async Task<IActionResult> GetTransactionsByMonth([FromQuery]int year, int month)
+    public async Task<IActionResult> GetTransactionsByMonth([FromQuery]int idUser, int year, int month)
     {
         if (month is < 1 or > 12)
         {
             throw new ArgumentOutOfRangeException(nameof(month), "O mês precisa se entre 1 e 12");
         }
 
-        var transactions = await _transactionService.GetTrasactionsByMonthAsync(year, month);
+        var transactions = await _transactionService.GetTrasactionsByMonthAsync(idUser, year, month);
 
         if (transactions == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma trasação encontrada para o mês informado.");

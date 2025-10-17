@@ -18,9 +18,9 @@ public class ReportService : IReportService
         _mapper = mapper;
     }
 
-    public async Task<MonthlyReportDto> GetMonthlyReportAsync(int year, int month)
+    public async Task<MonthlyReportDto> GetMonthlyReportAsync(int idUser, int year, int month)
     {
-        var transactions = await _transactionRepository.GetTransactionByMonthAsync(year, month);
+        var transactions = await _transactionRepository.GetTransactionByMonthAsync(idUser, year, month);
 
         var totalIncome = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
         var totalExpense = transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);

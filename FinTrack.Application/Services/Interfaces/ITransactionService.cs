@@ -10,6 +10,6 @@ namespace FinTrack.Application.Services.Interfaces
         Task<TransactionDto> GetTransactionByAccountAsync(int accountId);
         Task<TransactionDto> GetTransactionByIdAsync(int id);
         Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto);
-        Task<IEnumerable<TransactionDto>> GetTrasactionsByMonthAsync(int year,  int month);
+        Task<IEnumerable<TransactionDto>> GetTrasactionsByMonthAsync(int idUser, int year,  int month);
     }
 }

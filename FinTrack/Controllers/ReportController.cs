@@ -16,12 +16,12 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("MonthlyReport")]
-    public async Task<IActionResult> GetMonthlyReport([FromQuery] int year, [FromQuery] int month)
+    public async Task<IActionResult> GetMonthlyReport([FromQuery] int idUser, [FromQuery] int year, [FromQuery] int month)
     {
         if (year < 1 || month < 1 || month > 12)
             return StatusCode((int)HttpStatusCode.BadRequest, "Invalid year/month.");
 
-        var report = await _reportService.GetMonthlyReportAsync(year, month);
+        var report = await _reportService.GetMonthlyReportAsync(idUser, year, month);
         return Ok(report);
     }
 }
