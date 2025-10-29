@@ -1,10 +1,12 @@
 ﻿using FinTrack.Application.Services;
 using FinTrack.Application.Services.Interfaces;
+using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Data.Context;
 using FinTrack.Infraestructure.Data.Context.Interfaces;
 using FinTrack.Infraestructure.Repositories;
 using FinTrack.Infraestructure.Repositories.Interfaces;
 using FinTrack.Transform.Profiles;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
