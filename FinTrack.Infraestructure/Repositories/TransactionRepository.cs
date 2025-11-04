@@ -1,4 +1,5 @@
-﻿using FinTrack.Domain.Entities;
+﻿using Fintrack.Contracts.Pagination;
+using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Data.Context.Interfaces;
 using FinTrack.Infraestructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -37,13 +38,15 @@ public class TransactionRepository : ITransactionRepository
         return true;
     }
 
-    public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
+    public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync(TransactionParameters transactionParameters)
     {
         return await _context.Transactions
             .AsNoTracking()
             .Include(t => t.Category)
             .Include(t => t.Account)
             .OrderByDescending(t => t.CreatedAt)
+            .Skip((transactionParameters.PageNumber -1) * transactionParameters.PageSize) 
+            .Take(transactionParameters.PageSize)
             .ToListAsync();
     }
 

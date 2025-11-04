@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Fintrack.Contracts.DTOs.Transaction;
+using Fintrack.Contracts.Pagination;
 using FinTrack.Application.Services.Interfaces;
 using FinTrack.Domain.Entities;
 using FinTrack.Infraestructure.Repositories.Interfaces;
@@ -32,9 +33,9 @@ public class TransactionService : ITransactionService
         return true;
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync()
+    public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync(TransactionParameters transactionParameters)
     {
-        var entities = await _transactionRepository.GetAllTransactionsAsync();
+        var entities = await _transactionRepository.GetAllTransactionsAsync(transactionParameters);
 
         return _mapper.Map<IEnumerable<TransactionDto>>(entities);
     }

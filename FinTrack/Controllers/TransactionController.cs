@@ -1,4 +1,5 @@
 ﻿using Fintrack.Contracts.DTOs.Transaction;
+using Fintrack.Contracts.Pagination;
 using FinTrack.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -17,9 +18,9 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllTransactions()
+    public async Task<IActionResult> GetAllTransactions([FromQuery] TransactionParameters transactionParameters)
     {
-        var transactions = await _transactionService.GetAllTransactionsAsync();
+        var transactions = await _transactionService.GetAllTransactionsAsync(transactionParameters);
 
         if (transactions == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma trasação encontrada.");
