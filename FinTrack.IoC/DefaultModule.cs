@@ -36,7 +36,7 @@ public class DefaultModule
 
         service.AddTransient<IReportService, ReportService>();
 
-        service.AddAutoMapper(
+        service.AddAutoMapper( cfg => { },
             typeof(AccountProfile),
             typeof(CategoryProfile),
             typeof(TransactionProfile));

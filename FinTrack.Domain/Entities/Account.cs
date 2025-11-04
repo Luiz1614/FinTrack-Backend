@@ -21,6 +21,6 @@ public class Account
     public decimal CurrentBalance { get; set; }
 
     [ForeignKey("UserId")]
-    public Users? User { get; set; }
+    public User? User { get; set; }
     public List<Transaction> Transactions { get; set; } = new();
 }
