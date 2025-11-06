@@ -1,10 +1,13 @@
 ﻿using Fintrack.Contracts.DTOs.Account;
 using FinTrack.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace FinTrack.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
@@ -28,7 +31,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetAccountByIdAsync([FromQuery] int id)
+    public async Task<IActionResult> GetAccountByIdAsync(int id)
     {
         var account = await _accountService.GetAccountByIdAsync(id);
 
@@ -41,6 +44,15 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddAccount([FromBody] AccountCreateDto account)
     {
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var accountName = User.FindFirstValue(ClaimTypes.Name);
+
+        if (!int.TryParse(userIdValue, out var userId))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        account.UserId = userId;
+        account.Name = accountName;
+
         var result = await _accountService.AddAccountAsync(account);
 
         if (result == null)

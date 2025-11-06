@@ -1,10 +1,12 @@
 ﻿using Fintrack.Contracts.DTOs.Category;
 using FinTrack.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace FinTrack.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase

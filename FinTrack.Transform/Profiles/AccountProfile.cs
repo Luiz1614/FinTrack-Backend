@@ -23,8 +23,10 @@ public class AccountProfile : Profile
             .ForMember(d => d.Type, opt => opt.MapFrom(s => s.Type.ToString()))
             .ForMember(d => d.CategoryTitle, opt => opt.MapFrom(s => s.Category != null ? s.Category.Title : string.Empty));
 
-        // DTO -> Domain (Create)
-        CreateMap<AccountCreateDto, Account>();
+        // DTO -> Domain (Create) — fix typo and set balances
+        CreateMap<AccountCreateDto, Account>()
+            .ForMember(d => d.InitialBalance, opt => opt.MapFrom(s => s.InitalBalance))
+            .ForMember(d => d.CurrentBalance, opt => opt.MapFrom(s => s.InitalBalance));
 
         // DTO -> Domain (Update)
         CreateMap<AccountUpdateDto, Account>()

@@ -36,6 +36,8 @@ public class DefaultModule
 
         service.AddTransient<IReportService, ReportService>();
 
+        service.AddScoped<ITokenService, TokenService>();
+
         service.AddAutoMapper( cfg => { },
             typeof(AccountProfile),
             typeof(CategoryProfile),

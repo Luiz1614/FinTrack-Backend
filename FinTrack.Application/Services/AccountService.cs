@@ -3,9 +3,7 @@ using Fintrack.Contracts.DTOs.Account;
 using FinTrack.Application.DTOs.Accounts;
 using FinTrack.Application.Services.Interfaces;
 using FinTrack.Domain.Entities;
-using FinTrack.Domain.Enums;
 using FinTrack.Infraestructure.Repositories.Interfaces;
-using System.Linq;
 
 namespace FinTrack.Application.Services;
 
@@ -22,12 +20,7 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto> AddAccountAsync(AccountCreateDto accountCreateDto)
     {
-        var entity = new Account
-        {
-            Name = accountCreateDto.Name,
-            InitialBalance = accountCreateDto.InitalBalance,
-            CurrentBalance = accountCreateDto.InitalBalance
-        };
+        var entity = _mapper.Map<Account>(accountCreateDto);
 
         var savedEntity = await _accountRepository.AddAccountAsync(entity);
 

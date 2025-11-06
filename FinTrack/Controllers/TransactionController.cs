@@ -1,11 +1,13 @@
 ﻿using Fintrack.Contracts.DTOs.Transaction;
 using Fintrack.Contracts.Pagination;
 using FinTrack.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace FinTrack.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class TransactionController : ControllerBase
