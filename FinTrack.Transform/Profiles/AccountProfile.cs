@@ -3,7 +3,6 @@ using Fintrack.Contracts.DTOs.Account;
 using FinTrack.Application.DTOs.Accounts;
 using FinTrack.Domain.Entities;
 using FinTrack.Domain.Enums;
-using System.Linq;
 
 namespace FinTrack.Transform.Profiles;
 
@@ -30,6 +29,7 @@ public class AccountProfile : Profile
 
         // DTO -> Domain (Update)
         CreateMap<AccountUpdateDto, Account>()
+            .ForMember(d => d.UserId, opt => opt.Ignore())
             .ForMember(d => d.Transactions, opt => opt.Ignore());
     }
 }

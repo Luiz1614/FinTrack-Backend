@@ -44,11 +44,13 @@ public class AccountRepository : IAccountRepository
 
     public async Task<Account> UpdateAccountAsync(Account account)
     {
-        var exists = await _context.Accounts.AsNoTracking().AnyAsync(a => a.Id == account.Id);
-        if (!exists)
+        var exists = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
+        if (exists is null)
             throw new KeyNotFoundException($"Account with id {account.Id} not found.");
 
-        _context.Accounts.Update(account);
+        exists.Name = account.Name;
+        exists.InitialBalance = account.InitialBalance;
+
         await _context.SaveChangesAsync();
         return account;
     }
