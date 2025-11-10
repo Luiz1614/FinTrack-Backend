@@ -18,13 +18,15 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ITokenService tokenService, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
+    public AuthController(ITokenService tokenService, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration, ILogger<AuthController> logger)
     {
         _tokenService = tokenService;
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -96,7 +98,7 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, registerDto.Password!);
 
         if(!result.Succeeded)
-            return StatusCode((int)HttpStatusCode.InternalServerError, "Erro ao criar usuário.");
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro ao criar usuário. \n{result}");
 
         return StatusCode((int)HttpStatusCode.OK, "Usuário criado com sucesso!");
     }
@@ -152,5 +154,55 @@ public class AuthController : ControllerBase
         await _userManager.UpdateAsync(user);
 
         return NoContent();
+    }
+
+    [HttpPost]
+    [Route("CreateRole")]
+    public async Task<IActionResult> CreateRole([FromQuery]string roleName)
+    {
+        var roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExist)
+        {
+            var roleResult = await _roleManager.CreateAsync(new IdentityRole<int>(roleName));
+
+            if (roleResult.Succeeded)
+            {
+                _logger.LogInformation(1, "RolesAdded");
+                return StatusCode((int)HttpStatusCode.OK, $"Perfil {roleName} Criado com sucesso!");
+            }
+            else
+            {
+                _logger.LogError(2, "Error");
+                return StatusCode((int) HttpStatusCode.BadRequest, $"Houve um problema ao criar o perfil {roleName}.");
+            }
+        }
+
+        return StatusCode((int)HttpStatusCode.BadRequest, $"Perfil já existente.");
+    }
+
+    [HttpPost]
+    [Route("AddUserToRole")]
+    public async Task<IActionResult> AddUserToRole([FromQuery]string email, string roleName)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if(user !=  null)
+        {
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+
+            if(result.Succeeded)
+            {
+                _logger.LogInformation(1, $"Usuário {user.Email} foi adicionado ao perfil {roleName}");
+                return StatusCode((int)HttpStatusCode.OK, $"Usuário {user.Email} foi adicionado ao perfil {roleName} com sucesso!");
+            }
+            else
+            {
+                _logger.LogError(1, $"Error: Erro ao adicionar o usuário {user.Email} ao perfil {roleName}.");
+                return StatusCode((int)HttpStatusCode.BadRequest, $"Error: Erro ao adicionar o usuário {user.Email} ao perfil {roleName}.");
+            }
+        }
+
+        return BadRequest("Usuário não encontrado.");
     }
 }

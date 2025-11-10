@@ -42,16 +42,16 @@ public class TransactionService : ITransactionService
 
     public async Task<TransactionDto> GetTransactionByIdAsync(int id)
     {
-        var entity = await _transactionRepository.GetByAccountAsync(id);
+        var entity = await _transactionRepository.GetTransactionByIdAsync(id);
 
         return _mapper.Map<TransactionDto>(entity);
     }
 
-    public async Task<TransactionDto> GetTransactionByAccountAsync(int accountId)
+    public async Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int accountId)
     {
         var entity = await _transactionRepository.GetByAccountAsync(accountId);
 
-        return _mapper.Map<TransactionDto>(entity);
+        return _mapper.Map<IEnumerable<TransactionDto>>(entity);
     }
 
     public async Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto)

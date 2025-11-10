@@ -4,6 +4,6 @@ namespace FinTrack.Application.Services.Interfaces
 {
     public interface IReportService
     {
-        Task<MonthlyReportDto> GetMonthlyReportAsync(int idUser, int year, int month);
+        Task<MonthlyReportDto> GetMonthlyReportAsync(int idAccount, int year, int month);
     }
 }
