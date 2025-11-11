@@ -5,7 +5,7 @@ using System.Net;
 
 namespace FinTrack.Controllers;
 
-[Authorize]
+[Authorize(Policy = "UserOnly")]
 [ApiController]
 [Route("api/[controller]")]
 public class ReportsController : ControllerBase

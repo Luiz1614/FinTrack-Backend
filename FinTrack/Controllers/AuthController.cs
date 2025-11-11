@@ -97,7 +97,9 @@ public class AuthController : ControllerBase
 
         var result = await _userManager.CreateAsync(user, registerDto.Password!);
 
-        if(!result.Succeeded)
+        _ = await _userManager.AddToRoleAsync(user, "User");
+
+        if (!result.Succeeded)
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Erro ao criar usuário. \n{result}");
 
         return StatusCode((int)HttpStatusCode.OK, "Usuário criado com sucesso!");
@@ -157,6 +159,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     [Route("CreateRole")]
     public async Task<IActionResult> CreateRole([FromQuery]string roleName)
     {
@@ -182,6 +185,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     [Route("AddUserToRole")]
     public async Task<IActionResult> AddUserToRole([FromQuery]string email, string roleName)
     {

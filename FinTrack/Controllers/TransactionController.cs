@@ -7,7 +7,7 @@ using System.Net;
 
 namespace FinTrack.Controllers;
 
-[Authorize]
+[Authorize(Policy = "UserOnly")]
 [ApiController]
 [Route("api/[controller]")]
 public class TransactionController : ControllerBase
@@ -31,7 +31,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetTransactionById([FromQuery] int id)
+    public async Task<IActionResult> GetTransactionById(int id)
     {
         var transaction = await _transactionService.GetTransactionByIdAsync(id);
 
@@ -42,7 +42,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("Account/{idAccount:int}")]
-    public async Task<IActionResult> GetTransactionByAccount([FromQuery] int accountId)
+    public async Task<IActionResult> GetTransactionByAccount(int accountId)
     {
         var transaction = await _transactionService.GetTransactionByAccountAsync(accountId);
 

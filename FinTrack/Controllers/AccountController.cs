@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace FinTrack.Controllers;
 
-[Authorize]
+[Authorize(Policy = "UserOnly")]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase

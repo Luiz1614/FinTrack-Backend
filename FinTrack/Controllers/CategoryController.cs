@@ -6,7 +6,7 @@ using System.Net;
 
 namespace FinTrack.Controllers;
 
-[Authorize]
+[Authorize(Policy = "UserOnly")]
 [ApiController]
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
@@ -30,7 +30,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetCategoryById([FromQuery] int id)
+    public async Task<IActionResult> GetCategoryById(int id)
     {
         var category = await _categoryService.GetCategoryByIdAsync(id);
 
@@ -41,6 +41,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> AddCategory([FromBody] CategoryCreateDto categoryCreateDto)
     {
         var result = await _categoryService.AddCategoryAsync(categoryCreateDto);
@@ -52,6 +53,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> UpdateCategory([FromBody] CategoryUpdateDto categoryUpdateDto)
     {
         var result = await _categoryService.UpdateCategoryAsync(categoryUpdateDto);
@@ -63,7 +65,8 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteCategory([FromQuery]int id)
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> DeleteCategory(int id)
     {
         var result = await _categoryService.DeleteCategoryAsync(id);
 
