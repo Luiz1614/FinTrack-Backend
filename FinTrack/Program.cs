@@ -4,9 +4,12 @@ using FinTrack.Infraestructure.Data.Context;
 using FinTrack.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +97,21 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: "GlobalLimiter",
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -105,9 +123,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseRateLimiter();
+
 app.UseCors("AllowAngularLocalhost");
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseAuthorization();
