@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Transform", "6 - Transf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Transform", "FinTrack.Transform\FinTrack.Transform.csproj", "{B079A389-9AC6-4817-B115-9134A25571A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Tests", "FinTrack.Tests\FinTrack.Tests.csproj", "{5867E490-A452-4C00-A69A-C3381F0ACCBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{B079A389-9AC6-4817-B115-9134A25571A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B079A389-9AC6-4817-B115-9134A25571A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B079A389-9AC6-4817-B115-9134A25571A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5867E490-A452-4C00-A69A-C3381F0ACCBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5867E490-A452-4C00-A69A-C3381F0ACCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5867E490-A452-4C00-A69A-C3381F0ACCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5867E490-A452-4C00-A69A-C3381F0ACCBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{3792D281-B669-4E51-9E31-2287DB45C6AE} = {D9C44B3B-0B8D-49AB-880F-60A67C6ACEA3}
 		{ACB52786-B8CD-4CEF-8B47-74DEF7159672} = {0515FDA7-792C-4CFD-85E8-9D2DC8FBFF29}
 		{B079A389-9AC6-4817-B115-9134A25571A8} = {9037C4B8-7540-4CDF-BA41-31E3AD48EDB0}
+		{5867E490-A452-4C00-A69A-C3381F0ACCBD} = {D030D6C6-E3E0-48DB-A24F-5D436ACC1982}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1DC03A15-69A5-4232-A124-9B58F1B07289}
