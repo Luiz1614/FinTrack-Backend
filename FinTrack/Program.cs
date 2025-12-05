@@ -18,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 DefaultModule.Start(builder.Services, builder.Configuration);
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(ApiExceptionFilter));
