@@ -6,7 +6,6 @@ public class AccountCreateDto
 {
     [JsonIgnore]
     public int UserId { get; set; }
-    [JsonIgnore]
     public string? Name { get; set; }
     public decimal InitalBalance { get; set; }
 }

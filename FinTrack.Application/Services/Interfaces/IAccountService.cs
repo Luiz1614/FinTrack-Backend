@@ -6,9 +6,9 @@ namespace FinTrack.Application.Services.Interfaces
     public interface IAccountService
     {
         Task<AccountDto> AddAccountAsync(AccountCreateDto accountCreateDto);
-        Task<bool> DeleteAccountAsync(int id);
-        Task<AccountDto> GetAccountByIdAsync(int id);
-        Task<IEnumerable<AccountDto>> GetAllAccountsAsync();
+        Task<bool> DeleteAccountAsync(int idAccount, int idUser);
+        Task<AccountDto> GetAccountByIdAsync(int idAccount, int idUser);
+        Task<IEnumerable<AccountDto>> GetAllAccountsAsync(int idUser);
         Task<AccountDto> UpdateAccountAsync(AccountUpdateDto accountDto);
     }
 }

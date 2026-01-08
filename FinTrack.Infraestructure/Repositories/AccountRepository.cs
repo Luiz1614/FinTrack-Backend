@@ -21,9 +21,9 @@ public class AccountRepository : IAccountRepository
         return account;
     }
 
-    public async Task<bool> DeleteAccountAsync(int id)
+    public async Task<bool> DeleteAccountAsync(int idAccount, int idUser)
     {
-        var accountEntity = await GetAccountByIdAsync(id);
+        var accountEntity = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == idAccount && x.UserId == idUser);
         if (accountEntity == null)
             return false;
 
@@ -32,14 +32,9 @@ public class AccountRepository : IAccountRepository
         return true;
     }
 
-    public async Task<IEnumerable<Account>> GetAllAccountsAsync()
+    public async Task<IEnumerable<Account>> GetAllAccountsAsync(int idUser)
     {
-        return await _context.Accounts.AsNoTracking().ToListAsync();
-    }
-
-    public async Task<Account?> GetAccountByIdAsync(int id)
-    {
-        return await _context.Accounts.FindAsync(id);
+        return await _context.Accounts.AsNoTracking().Where(a => a.Id == idUser).ToListAsync();
     }
 
     public async Task<Account> UpdateAccountAsync(Account account)
@@ -55,21 +50,30 @@ public class AccountRepository : IAccountRepository
         return account;
     }
 
-    public async Task<Account?> GetAccountWithTransactionsAsync(int id)
+    public async Task<Account?> GetAccountByIdAsync(int idAccount, int idUser)
     {
         return await _context.Accounts
             .AsNoTracking()
-            .Include(a => a.Transactions)
-                .ThenInclude(t => t.Category)
-            .FirstOrDefaultAsync(a => a.Id == id);
+            .FirstOrDefaultAsync(a => a.Id == idAccount && a.UserId == idUser);
     }
 
-    public async Task<IEnumerable<Account>> GetAllAccountsWithTransactionsAsync()
+    public async Task<Account?> GetAccountWithTransactionsAsync(int id, int idUser)
+    {
+        return await _context.Accounts
+            .AsNoTracking()
+            .Include(u => u.User)
+            .Include(a => a.Transactions)
+            .ThenInclude(t => t.Category)
+            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == idUser);
+    }
+
+    public async Task<IEnumerable<Account>> GetAllAccountsWithTransactionsAsync(int idUser)
     {
         return await _context.Accounts
             .AsNoTracking()
             .Include(a => a.Transactions)
                 .ThenInclude(t => t.Category)
+                .Where(a => a.Id == idUser)
             .ToListAsync();
     }
 }

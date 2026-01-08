@@ -38,7 +38,7 @@ public class TransactionRepository : ITransactionRepository
         return true;
     }
 
-    public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync(TransactionParameters transactionParameters)
+    public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync(TransactionParameters transactionParameters, int idUser)
     {
         return await _context.Transactions
             .AsNoTracking()

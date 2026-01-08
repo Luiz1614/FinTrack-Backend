@@ -27,23 +27,23 @@ public class AccountService : IAccountService
         return _mapper.Map<AccountDto>(savedEntity);
     }
 
-    public async Task<bool> DeleteAccountAsync(int id)
+    public async Task<bool> DeleteAccountAsync(int idAccount, int idUser)
     {
-        await _accountRepository.DeleteAccountAsync(id);
+        await _accountRepository.DeleteAccountAsync(idAccount, idUser);
         return true;
     }
 
-    public async Task<IEnumerable<AccountDto>> GetAllAccountsAsync()
+    public async Task<IEnumerable<AccountDto>> GetAllAccountsAsync(int idUser)
     {
-        var entities = await _accountRepository.GetAllAccountsWithTransactionsAsync();
+        var entities = await _accountRepository.GetAllAccountsWithTransactionsAsync(idUser);
 
         var dtos = _mapper.Map<IEnumerable<AccountDto>>(entities);
         return dtos;
     }
 
-    public async Task<AccountDto> GetAccountByIdAsync(int id)
+    public async Task<AccountDto> GetAccountByIdAsync(int idAccount, int idUser)
     {
-        var entity = await _accountRepository.GetAccountWithTransactionsAsync(id);
+        var entity = await _accountRepository.GetAccountWithTransactionsAsync(idAccount, idUser);
 
         return _mapper.Map<AccountDto>(entity);
     }

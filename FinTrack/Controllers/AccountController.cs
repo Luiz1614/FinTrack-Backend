@@ -28,7 +28,12 @@ public class AccountController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAccounts()
     {
-        var accounts = await _accountService.GetAllAccountsAsync();
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var userId))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var accounts = await _accountService.GetAllAccountsAsync(userId);
 
         if (accounts == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma conta encontrada.");
@@ -39,14 +44,19 @@ public class AccountController : ControllerBase
     /// <summary>
     /// Obtém uma conta específica pelo seu ID.
     /// </summary>
-    /// <param name="id">O ID da conta a ser recuperada.</param>
+    /// <param name="idAccount">O ID da conta a ser recuperada.</param>
     /// <returns>O objeto da conta correspondente ao ID.</returns>
     /// <response code="200">Retorna a conta solicitada.</response>
     /// <response code="404">Se a conta com o ID especificado não for encontrada.</response>
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetAccountByIdAsync(int id)
+    public async Task<IActionResult> GetAccountByIdAsync(int idAccount)
     {
-        var account = await _accountService.GetAccountByIdAsync(id);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var account = await _accountService.GetAccountByIdAsync(idAccount, idUser);
 
         if (account == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma conta encontrada para o id fornecido.");
@@ -66,13 +76,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> AddAccount([FromBody] AccountCreateDto account)
     {
         var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var accountName = User.FindFirstValue(ClaimTypes.Name);
 
         if (!int.TryParse(userIdValue, out var userId))
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
 
         account.UserId = userId;
-        account.Name = accountName;
 
         var result = await _accountService.AddAccountAsync(account);
 
@@ -103,14 +111,19 @@ public class AccountController : ControllerBase
     /// <summary>
     /// Exclui uma conta pelo seu ID.
     /// </summary>
-    /// <param name="id">O ID da conta a ser excluída.</param>
+    /// <param name="idAccount">O ID da conta a ser excluída.</param>
     /// <returns>Status da operação.</returns>
     /// <response code="204">Indica que a conta foi excluída com sucesso.</response>
     /// <response code="400">Se a exclusão da conta falhar.</response>
     [HttpDelete]
-    public async Task<IActionResult> DeleteAccount([FromQuery] int id)
+    public async Task<IActionResult> DeleteAccount([FromQuery] int idAccount)
     {
-        var result = await _accountService.DeleteAccountAsync(id);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var result = await _accountService.DeleteAccountAsync(idAccount, idUser);
 
         if (result == false)
         {

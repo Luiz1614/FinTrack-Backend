@@ -33,9 +33,9 @@ public class TransactionService : ITransactionService
         return true;
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync(TransactionParameters transactionParameters)
+    public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync(TransactionParameters transactionParameters, int idUser)
     {
-        var entities = await _transactionRepository.GetAllTransactionsAsync(transactionParameters);
+        var entities = await _transactionRepository.GetAllTransactionsAsync(transactionParameters, idUser);
 
         return _mapper.Map<IEnumerable<TransactionDto>>(entities);
     }

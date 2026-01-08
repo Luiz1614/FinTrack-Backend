@@ -4,6 +4,7 @@ using FinTrack.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace FinTrack.Controllers;
 
@@ -29,7 +30,12 @@ public class TransactionController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllTransactions([FromQuery] TransactionParameters transactionParameters)
     {
-        var transactions = await _transactionService.GetAllTransactionsAsync(transactionParameters);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var userId))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var transactions = await _transactionService.GetAllTransactionsAsync(transactionParameters, userId);
 
         if (transactions == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma trasação encontrada.");
@@ -40,14 +46,19 @@ public class TransactionController : ControllerBase
     /// <summary>
     /// Obtém uma transação específica pelo seu ID.
     /// </summary>
-    /// <param name="id">O ID da transação a ser recuperada.</param>
+    /// <param name="idTransaction">O ID da transação a ser recuperada.</param>
     /// <returns>O objeto da transação correspondente ao ID.</returns>
     /// <response code="200">Retorna a transação solicitada.</response>
     /// <response code="404">Se a transação com o ID especificado não for encontrada.</response>
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetTransactionById(int id)
+    public async Task<IActionResult> GetTransactionById(int idTransaction)
     {
-        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var userId))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var transaction = await _transactionService.GetTransactionByIdAsync(idTransaction, userId);
 
         if (transaction == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma transação encontrada para o id fornecido.");
@@ -58,14 +69,19 @@ public class TransactionController : ControllerBase
     /// <summary>
     /// Obtém todas as transações de uma conta específica.
     /// </summary>
-    /// <param name="accountId">O ID da conta.</param>
+    /// <param name="idAccount">O ID da conta.</param>
     /// <returns>Uma lista de transações para a conta especificada.</returns>
     /// <response code="200">Retorna a lista de transações.</response>
     /// <response code="404">Se nenhuma transação for encontrada para a conta fornecida.</response>
     [HttpGet("Account/{idAccount:int}")]
-    public async Task<IActionResult> GetTransactionByAccount(int accountId)
+    public async Task<IActionResult> GetTransactionByAccount(int idAccount)
     {
-        var transaction = await _transactionService.GetTransactionByAccountAsync(accountId);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var transaction = await _transactionService.GetTransactionByAccountAsync(idAccount, );
 
         if (transaction == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma transação encontrada para a conta fornecida.");
