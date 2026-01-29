@@ -27,9 +27,9 @@ public class TransactionService : ITransactionService
         return _mapper.Map<TransactionDto>(createdEntity);
     }
 
-    public async Task<bool> DeleteTransactionAsync(int id)
+    public async Task<bool> DeleteTransactionAsync(int idTransaction, int idUser)
     {
-        await _transactionRepository.DeleteTransactionAsync(id);
+        await _transactionRepository.DeleteTransactionAsync(idTransaction, idUser);
         return true;
     }
 
@@ -40,25 +40,25 @@ public class TransactionService : ITransactionService
         return _mapper.Map<IEnumerable<TransactionDto>>(entities);
     }
 
-    public async Task<TransactionDto> GetTransactionByIdAsync(int id)
+    public async Task<TransactionDto> GetTransactionByIdAsync(int idTransaction, int idUser)
     {
-        var entity = await _transactionRepository.GetTransactionByIdAsync(id);
+        var entity = await _transactionRepository.GetTransactionByIdAsync(idTransaction, idUser);
 
         return _mapper.Map<TransactionDto>(entity);
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int accountId)
+    public async Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int idAccount, int idUser)
     {
-        var entity = await _transactionRepository.GetByAccountAsync(accountId);
+        var entity = await _transactionRepository.GetByAccountAsync(idAccount, idUser);
 
         return _mapper.Map<IEnumerable<TransactionDto>>(entity);
     }
 
-    public async Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto)
+    public async Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto, int idUser)
     {
         var entity = _mapper.Map<Transaction>(transactionUpdateDto);
 
-        var updatedEntity = await _transactionRepository.UpdateTransactionAsync(entity);
+        var updatedEntity = await _transactionRepository.UpdateTransactionAsync(entity, idUser);
 
         return _mapper.Map<TransactionDto>(updatedEntity);
     }

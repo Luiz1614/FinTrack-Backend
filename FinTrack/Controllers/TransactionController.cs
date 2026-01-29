@@ -32,10 +32,10 @@ public class TransactionController : ControllerBase
     {
         var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (!int.TryParse(userIdValue, out var userId))
+        if (!int.TryParse(userIdValue, out var idUser))
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
 
-        var transactions = await _transactionService.GetAllTransactionsAsync(transactionParameters, userId);
+        var transactions = await _transactionService.GetAllTransactionsAsync(transactionParameters, idUser);
 
         if (transactions == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma trasação encontrada.");
@@ -55,10 +55,10 @@ public class TransactionController : ControllerBase
     {
         var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (!int.TryParse(userIdValue, out var userId))
+        if (!int.TryParse(userIdValue, out var idUser))
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
 
-        var transaction = await _transactionService.GetTransactionByIdAsync(idTransaction, userId);
+        var transaction = await _transactionService.GetTransactionByIdAsync(idTransaction, idUser);
 
         if (transaction == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma transação encontrada para o id fornecido.");
@@ -81,7 +81,7 @@ public class TransactionController : ControllerBase
         if (!int.TryParse(userIdValue, out var idUser))
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
 
-        var transaction = await _transactionService.GetTransactionByAccountAsync(idAccount, );
+        var transaction = await _transactionService.GetTransactionByAccountAsync(idAccount, idUser);
 
         if (transaction == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma transação encontrada para a conta fornecida.");
@@ -142,7 +142,12 @@ public class TransactionController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateTransaction([FromBody] TransactionUpdateDto transaction)
     {
-        var result = await _transactionService.UpdateTransactionAsync(transaction);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var result = await _transactionService.UpdateTransactionAsync(transaction, idUser);
 
         if (result == null)
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível atualizar a transação. Verifique os dados enviados.");
@@ -153,14 +158,19 @@ public class TransactionController : ControllerBase
     /// <summary>
     /// Exclui uma transação pelo seu ID.
     /// </summary>
-    /// <param name="id">O ID da transação a ser excluída.</param>
+    /// <param name="idTransaction">O ID da transação a ser excluída.</param>
     /// <returns>Status da operação.</returns>
     /// <response code="204">Indica que a transação foi excluída com sucesso.</response>
     /// <response code="400">Se a exclusão da transação falhar.</response>
     [HttpDelete]
-    public async Task<IActionResult> DeleteTransaction([FromQuery] int id)
+    public async Task<IActionResult> DeleteTransaction([FromQuery] int idTransaction)
     {
-        var result = await _transactionService.DeleteTransactionAsync(id);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var result = await _transactionService.DeleteTransactionAsync(idTransaction, idUser);
 
         if (result == false)
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível deletar a transação. Verifique os dados enviados.");

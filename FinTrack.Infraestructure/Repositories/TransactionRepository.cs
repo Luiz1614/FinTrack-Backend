@@ -27,9 +27,12 @@ public class TransactionRepository : ITransactionRepository
             .FirstAsync(t => t.Id == transaction.Id);
     }
 
-    public async Task<bool> DeleteTransactionAsync(int id)
+    public async Task<bool> DeleteTransactionAsync(int idTransaction, int idUser)
     {
-        var entity = await _context.Transactions.FindAsync(id);
+        var entity = await _context.Transactions
+            .Include(t => t.Account)
+            .FirstOrDefaultAsync(t => t.Id == idTransaction && t.Account.UserId == idUser);
+
         if (entity == null)
             return false;
 
@@ -44,35 +47,39 @@ public class TransactionRepository : ITransactionRepository
             .AsNoTracking()
             .Include(t => t.Category)
             .Include(t => t.Account)
+            .Where(t => t.Account.UserId == idUser)
             .OrderByDescending(t => t.CreatedAt)
-            .Skip((transactionParameters.PageNumber -1) * transactionParameters.PageSize) 
+            .Skip((transactionParameters.PageNumber - 1) * transactionParameters.PageSize)
             .Take(transactionParameters.PageSize)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Transaction>> GetByAccountAsync(int accountId)
+    public async Task<IEnumerable<Transaction>> GetByAccountAsync(int idAccount, int idUser)
     {
         return await _context.Transactions
             .AsNoTracking()
             .Include(t => t.Category)
             .Include(t => t.Account)
-            .Where(t => t.AccountId == accountId)
+            .Where(t => t.AccountId == idAccount && t.Account.UserId == idUser)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }
 
-    public async Task<Transaction?> GetTransactionByIdAsync(int id)
+    public async Task<Transaction?> GetTransactionByIdAsync(int idTransaction, int idUser)
     {
         return await _context.Transactions
             .AsNoTracking()
             .Include(t => t.Category)
             .Include(t => t.Account)
-            .FirstOrDefaultAsync(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == idTransaction && t.Account.UserId == idUser);
     }
 
-    public async Task<Transaction?> UpdateTransactionAsync(Transaction transaction)
+    public async Task<Transaction?> UpdateTransactionAsync(Transaction transaction, int idUser)
     {
-        var entity = await _context.Transactions.FindAsync(transaction.Id);
+        var entity = await _context.Transactions
+            .Include(t => t.Account)
+            .FirstOrDefaultAsync(t => t.Id == transaction.Id && t.Account.UserId == idUser);
+
         if (entity == null)
             return null;
 
@@ -101,8 +108,8 @@ public class TransactionRepository : ITransactionRepository
             .AsNoTracking()
             .Include(t => t.Category)
             .Include(t => t.Account)
-            .Where(t => t.CreatedAt >= start && t.CreatedAt <= end)
-            .Where(t => t.AccountId == idUser)
+            .Where(t => t.CreatedAt >= start && t.CreatedAt < end)
+            .Where(t => t.Account.UserId == idUser)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }

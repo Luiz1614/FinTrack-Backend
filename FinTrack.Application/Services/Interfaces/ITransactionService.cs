@@ -6,11 +6,11 @@ namespace FinTrack.Application.Services.Interfaces
     public interface ITransactionService
     {
         Task<TransactionDto> AddTransactionAsync(TransactionCreateDto transactionCreateDto);
-        Task<bool> DeleteTransactionAsync(int id);
+        Task<bool> DeleteTransactionAsync(int idTransaction, int idUser);
         Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync(TransactionParameters trasactionParameters, int idUser);
-        Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int accountId);
-        Task<TransactionDto> GetTransactionByIdAsync(int id);
-        Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto);
+        Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int accountId, int idUser);
+        Task<TransactionDto> GetTransactionByIdAsync(int idTransaction, int idUser);
+        Task<TransactionDto> UpdateTransactionAsync(TransactionUpdateDto transactionUpdateDto, int idUser);
         Task<IEnumerable<TransactionDto>> GetTrasactionsByMonthAsync(int idUser, int year,  int month);
     }
 }
