@@ -30,10 +30,32 @@ public class AccountController : ControllerBase
     {
         var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (!int.TryParse(userIdValue, out var userId))
+        if (!int.TryParse(userIdValue, out var idUser))
             return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
 
-        var accounts = await _accountService.GetAllAccountsAsync(userId);
+        var accounts = await _accountService.GetAllAccountsAsync(idUser);
+
+        if (accounts == null)
+            return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma conta encontrada.");
+
+        return Ok(accounts);
+    }
+
+    /// <summary>
+    /// Obtém uma lista de todas e suas transações as contas do usuário autenticado.
+    /// </summary>
+    /// <returns>Uma lista de objetos de conta.</returns>
+    /// <response code="200">Retorna a lista de contas.</response>
+    /// <response code="404">Se nenhuma conta for encontrada.</response>
+    [HttpGet("transactions")]
+    public async Task<IActionResult> GetAllAccountsWithTransactions()
+    {
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var accounts = await _accountService.GetAllAccountsWithTransactionsAsync(idUser);
 
         if (accounts == null)
             return StatusCode((int)HttpStatusCode.NotFound, "Nenhuma conta encontrada.");

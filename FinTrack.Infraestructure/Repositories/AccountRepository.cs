@@ -34,7 +34,7 @@ public class AccountRepository : IAccountRepository
 
     public async Task<IEnumerable<Account>> GetAllAccountsAsync(int idUser)
     {
-        return await _context.Accounts.AsNoTracking().Where(a => a.Id == idUser).ToListAsync();
+        return await _context.Accounts.AsNoTracking().Where(a => a.UserId == idUser).ToListAsync();
     }
 
     public async Task<Account> UpdateAccountAsync(Account account)
@@ -73,7 +73,7 @@ public class AccountRepository : IAccountRepository
             .AsNoTracking()
             .Include(a => a.Transactions)
                 .ThenInclude(t => t.Category)
-                .Where(a => a.Id == idUser)
+                .Where(a => a.UserId == idUser)
             .ToListAsync();
     }
 }

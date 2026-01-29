@@ -39,7 +39,7 @@ public class AccountServiceTests
             CurrentBalance = 1000m
         };
 
-        var accountDto = new AccountDto
+        var accountDto = new AccountWithTransactionDto
         {
             Id = 1,
             Name = "Savings Account",
@@ -49,7 +49,7 @@ public class AccountServiceTests
 
         _mockMapper.Setup(m => m.Map<Account>(accountCreateDto)).Returns(accountEntity);
         _mockAccountRepository.Setup(r => r.AddAccountAsync(accountEntity)).ReturnsAsync(accountEntity);
-        _mockMapper.Setup(m => m.Map<AccountDto>(accountEntity)).Returns(accountDto);
+        _mockMapper.Setup(m => m.Map<AccountWithTransactionDto>(accountEntity)).Returns(accountDto);
 
         // Act
         var result = await _accountService.AddAccountAsync(accountCreateDto);
@@ -63,7 +63,7 @@ public class AccountServiceTests
 
         _mockMapper.Verify(m => m.Map<Account>(accountCreateDto), Times.Once);
         _mockAccountRepository.Verify(r => r.AddAccountAsync(accountEntity), Times.Once);
-        _mockMapper.Verify(m => m.Map<AccountDto>(accountEntity), Times.Once);
+        _mockMapper.Verify(m => m.Map<AccountWithTransactionDto>(accountEntity), Times.Once);
     }
 
     [Fact]
@@ -91,14 +91,14 @@ public class AccountServiceTests
             new Account { Id = 2, Name = "Savings Account", InitialBalance = 1000m, CurrentBalance = 1200m }
         };
 
-        var accountDtos = new List<AccountDto>
+        var accountDtos = new List<AccountWithTransactionDto>
         {
-            new AccountDto { Id = 1, Name = "Checking Account", InitialBalance = 500m, CurrentBalance = 500m },
-            new AccountDto { Id = 2, Name = "Savings Account", InitialBalance = 1000m, CurrentBalance = 1200m }
+            new AccountWithTransactionDto { Id = 1, Name = "Checking Account", InitialBalance = 500m, CurrentBalance = 500m },
+            new AccountWithTransactionDto { Id = 2, Name = "Savings Account", InitialBalance = 1000m, CurrentBalance = 1200m }
         };
 
         _mockAccountRepository.Setup(r => r.GetAllAccountsWithTransactionsAsync()).ReturnsAsync(accountEntities);
-        _mockMapper.Setup(m => m.Map<IEnumerable<AccountDto>>(accountEntities)).Returns(accountDtos);
+        _mockMapper.Setup(m => m.Map<IEnumerable<AccountWithTransactionDto>>(accountEntities)).Returns(accountDtos);
 
         // Act
         var result = await _accountService.GetAllAccountsAsync();
@@ -110,7 +110,7 @@ public class AccountServiceTests
         Assert.Equal(accountDtos[1].Name, result.Last().Name);
 
         _mockAccountRepository.Verify(r => r.GetAllAccountsWithTransactionsAsync(), Times.Once);
-        _mockMapper.Verify(m => m.Map<IEnumerable<AccountDto>>(accountEntities), Times.Once);
+        _mockMapper.Verify(m => m.Map<IEnumerable<AccountWithTransactionDto>>(accountEntities), Times.Once);
     }
 
     [Fact]
@@ -118,10 +118,10 @@ public class AccountServiceTests
     {
         // Arrange
         var emptyAccountEntities = new List<Account>();
-        var emptyAccountDtos = new List<AccountDto>();
+        var emptyAccountDtos = new List<AccountWithTransactionDto>();
 
         _mockAccountRepository.Setup(r => r.GetAllAccountsWithTransactionsAsync()).ReturnsAsync(emptyAccountEntities);
-        _mockMapper.Setup(m => m.Map<IEnumerable<AccountDto>>(emptyAccountEntities)).Returns(emptyAccountDtos);
+        _mockMapper.Setup(m => m.Map<IEnumerable<AccountWithTransactionDto>>(emptyAccountEntities)).Returns(emptyAccountDtos);
 
         // Act
         var result = await _accountService.GetAllAccountsAsync();
@@ -131,7 +131,7 @@ public class AccountServiceTests
         Assert.Empty(result);
 
         _mockAccountRepository.Verify(r => r.GetAllAccountsWithTransactionsAsync(), Times.Once);
-        _mockMapper.Verify(m => m.Map<IEnumerable<AccountDto>>(emptyAccountEntities), Times.Once);
+        _mockMapper.Verify(m => m.Map<IEnumerable<AccountWithTransactionDto>>(emptyAccountEntities), Times.Once);
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public class AccountServiceTests
             CurrentBalance = 750m
         };
 
-        var accountDto = new AccountDto
+        var accountDto = new AccountWithTransactionDto
         {
             Id = accountId,
             Name = "Checking Account",
@@ -156,7 +156,7 @@ public class AccountServiceTests
         };
 
         _mockAccountRepository.Setup(r => r.GetAccountWithTransactionsAsync(accountId)).ReturnsAsync(accountEntity);
-        _mockMapper.Setup(m => m.Map<AccountDto>(accountEntity)).Returns(accountDto);
+        _mockMapper.Setup(m => m.Map<AccountWithTransactionDto>(accountEntity)).Returns(accountDto);
 
         // Act
         var result = await _accountService.GetAccountByIdAsync(accountId);
@@ -169,7 +169,7 @@ public class AccountServiceTests
         Assert.Equal(accountDto.CurrentBalance, result.CurrentBalance);
 
         _mockAccountRepository.Verify(r => r.GetAccountWithTransactionsAsync(accountId), Times.Once);
-        _mockMapper.Verify(m => m.Map<AccountDto>(accountEntity), Times.Once);
+        _mockMapper.Verify(m => m.Map<AccountWithTransactionDto>(accountEntity), Times.Once);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class AccountServiceTests
         Account? nullAccount = null;
 
         _mockAccountRepository.Setup(r => r.GetAccountWithTransactionsAsync(accountId)).ReturnsAsync(nullAccount);
-        _mockMapper.Setup(m => m.Map<AccountDto>(nullAccount)).Returns((AccountDto)null!);
+        _mockMapper.Setup(m => m.Map<AccountWithTransactionDto>(nullAccount)).Returns((AccountWithTransactionDto)null!);
 
         // Act
         var result = await _accountService.GetAccountByIdAsync(accountId);
@@ -210,7 +210,7 @@ public class AccountServiceTests
             CurrentBalance = 2000m
         };
 
-        var updatedAccountDto = new AccountDto
+        var updatedAccountDto = new AccountWithTransactionDto
         {
             Id = 1,
             Name = "Updated Account",
@@ -220,7 +220,7 @@ public class AccountServiceTests
 
         _mockMapper.Setup(m => m.Map<Account>(accountUpdateDto)).Returns(accountEntity);
         _mockAccountRepository.Setup(r => r.UpdateAccountAsync(accountEntity)).ReturnsAsync(accountEntity);
-        _mockMapper.Setup(m => m.Map<AccountDto>(accountEntity)).Returns(updatedAccountDto);
+        _mockMapper.Setup(m => m.Map<AccountWithTransactionDto>(accountEntity)).Returns(updatedAccountDto);
 
         // Act
         var result = await _accountService.UpdateAccountAsync(accountUpdateDto);
@@ -234,6 +234,6 @@ public class AccountServiceTests
 
         _mockMapper.Verify(m => m.Map<Account>(accountUpdateDto), Times.Once);
         _mockAccountRepository.Verify(r => r.UpdateAccountAsync(accountEntity), Times.Once);
-        _mockMapper.Verify(m => m.Map<AccountDto>(accountEntity), Times.Once);
+        _mockMapper.Verify(m => m.Map<AccountWithTransactionDto>(accountEntity), Times.Once);
     }
 }

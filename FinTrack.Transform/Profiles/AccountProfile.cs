@@ -15,6 +15,12 @@ public class AccountProfile : Profile
             .ForMember(d => d.CurrentBalance, opt => opt.MapFrom(s =>
                 s.Transactions != null
                     ? s.InitialBalance + s.Transactions.Sum(t => t.Type == TransactionType.Income ? t.Amount : -t.Amount)
+                    : s.InitialBalance));
+
+        CreateMap<Account, AccountWithTransactionDto>()
+            .ForMember(d => d.CurrentBalance, opt => opt.MapFrom(s =>
+                s.Transactions != null
+                    ? s.InitialBalance + s.Transactions.Sum(t => t.Type == TransactionType.Income ? t.Amount : -t.Amount)
                     : s.InitialBalance))
             .ForMember(d => d.Transactions, opt => opt.MapFrom(s => s.Transactions));
 
