@@ -1,4 +1,5 @@
-﻿using Fintrack.Contracts.DTOs.User;
+﻿using AutoMapper;
+using Fintrack.Contracts.DTOs.User;
 using FinTrack.Application.Services.Interfaces;
 using FinTrack.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -251,5 +252,28 @@ public class AuthController : ControllerBase
         }
 
         return BadRequest("Usuário não encontrado.");
+    }
+
+    [HttpPut]
+    [Authorize(Policy = "UserOnly")]
+    [Route("UpdateUser")]
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateDto updateDto)
+    {
+        var entity = await _userManager.FindByNameAsync(updateDto.UserName!);
+
+        if (entity == null)
+            return NotFound("Usuário não encontrado.");
+
+        entity.Email = updateDto.Email;
+        entity.PhoneNumber = updateDto.PhoneNumber;
+        entity.UserName = updateDto.UserName;
+        entity.DateOfBirth = updateDto.DateOfBirth;
+
+        var result = await _userManager.UpdateAsync(entity);
+
+        if (result.Succeeded)
+            return Ok("Usuário atualizado com sucesso.");
+
+        return BadRequest(result.Errors);
     }
 }
