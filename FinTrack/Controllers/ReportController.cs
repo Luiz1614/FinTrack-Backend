@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace FinTrack.Controllers;
 
@@ -32,7 +33,12 @@ public class ReportsController : ControllerBase
         if (year < 1 || month < 1 || month > 12)
             return StatusCode((int)HttpStatusCode.BadRequest, "Invalid year/month.");
 
-        var report = await _reportService.GetMonthlyReportAsync(idAccount, year, month);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var report = await _reportService.GetMonthlyReportAsync(idAccount, idUser, year, month);
         return Ok(report);
     }
 }

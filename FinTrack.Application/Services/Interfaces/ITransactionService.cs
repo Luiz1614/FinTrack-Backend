@@ -5,7 +5,7 @@ namespace FinTrack.Application.Services.Interfaces
 {
     public interface ITransactionService
     {
-        Task<TransactionDto> AddTransactionAsync(TransactionCreateDto transactionCreateDto);
+        Task<TransactionDto> AddTransactionAsync(TransactionCreateDto transactionCreateDto, int idUser);
         Task<bool> DeleteTransactionAsync(int idTransaction, int idUser);
         Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync(TransactionParameters trasactionParameters, int idUser);
         Task<IEnumerable<TransactionDto>> GetTransactionByAccountAsync(int accountId, int idUser);

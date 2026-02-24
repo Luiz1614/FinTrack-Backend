@@ -76,4 +76,15 @@ public class AccountRepository : IAccountRepository
                 .Where(a => a.UserId == idUser)
             .ToListAsync();
     }
+
+    public async Task UpdateCurrentBalanceAsync(int accountId, decimal newBalance)
+    {
+        var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+
+        if (account is null)
+            throw new KeyNotFoundException($"Account with id {accountId} not found.");
+
+        account.CurrentBalance = newBalance;
+        await _context.SaveChangesAsync();
+    }
 }

@@ -113,4 +113,19 @@ public class TransactionRepository : ITransactionRepository
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Transaction>> GetTransactionByAccountAndMonthAsync(int idAccount, int idUser, int year, int month)
+    {
+        var start = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var end = start.AddMonths(1);
+
+        return await _context.Transactions
+            .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.Account)
+            .Where(t => t.AccountId == idAccount && t.Account.UserId == idUser)
+            .Where(t => t.CreatedAt >= start && t.CreatedAt < end)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
+    }
 }

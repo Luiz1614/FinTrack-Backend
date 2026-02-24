@@ -11,5 +11,6 @@ namespace FinTrack.Infraestructure.Repositories.Interfaces
         Task<Account> UpdateAccountAsync(Account account);
         Task<Account?> GetAccountWithTransactionsAsync(int id, int idUser);
         Task<IEnumerable<Account>> GetAllAccountsWithTransactionsAsync(int idUser);
+        Task UpdateCurrentBalanceAsync(int accountId, decimal newBalance);
     }
 }

@@ -124,7 +124,12 @@ public class TransactionController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddTransaction([FromBody] TransactionCreateDto transaction)
     {
-        var result = await _transactionService.AddTransactionAsync(transaction);
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdValue, out var idUser))
+            return StatusCode((int)HttpStatusCode.InternalServerError, $"Usuário não encontrado");
+
+        var result = await _transactionService.AddTransactionAsync(transaction, idUser);
 
         if (result == null)
             return StatusCode((int)HttpStatusCode.BadRequest, "Não foi possível criar a transação. Verifique os dados enviados.");

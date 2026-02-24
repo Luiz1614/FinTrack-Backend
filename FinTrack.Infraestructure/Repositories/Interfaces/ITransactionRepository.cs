@@ -9,8 +9,9 @@ namespace FinTrack.Infraestructure.Repositories.Interfaces
         Task<bool> DeleteTransactionAsync(int idTransaction, int idUser);
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync(TransactionParameters transactionParameters, int idUser);
         Task<IEnumerable<Transaction>> GetByAccountAsync(int idAccount, int idUser);
-        Task<Transaction?> GetTransactionByIdAsync(int idAccount, int idUser);
+        Task<Transaction?> GetTransactionByIdAsync(int idTransaction, int idUser);
         Task<IEnumerable<Transaction>> GetTransactionByMonthAsync(int idUser, int year, int month);
+        Task<IEnumerable<Transaction>> GetTransactionByAccountAndMonthAsync(int idAccount, int idUser, int year, int month);
         Task<Transaction?> UpdateTransactionAsync(Transaction transaction, int idUser);
     }
 }
