@@ -54,6 +54,8 @@ public class AuthController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.Email, user.Email!),
+                new Claim("dateofbirth", user.DateOfBirth.ToString("yyyy-MM-dd")), 
+                new Claim("phone", user.PhoneNumber ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -259,7 +261,9 @@ public class AuthController : ControllerBase
     [Route("UpdateUser")]
     public async Task<IActionResult> UpdateUser([FromBody] UpdateDto updateDto)
     {
-        var entity = await _userManager.FindByNameAsync(updateDto.UserName!);
+        var idUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var entity = await _userManager.FindByIdAsync(idUser!);
 
         if (entity == null)
             return NotFound("Usuário não encontrado.");
