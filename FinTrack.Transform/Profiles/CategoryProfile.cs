@@ -9,9 +9,7 @@ public class CategoryProfile : Profile
     public CategoryProfile()
     {
         // Domain -> DTO
-        CreateMap<Category, CategoryDto>()
-            .ForMember(d => d.TransactionsCount, opt => opt.MapFrom(s => s.Transactions != null ? s.Transactions.Count : 0));
-
+        CreateMap<Category, CategoryDto>();
         // DTO -> Domain
         CreateMap<CategoryCreateDto, Category>();
 
